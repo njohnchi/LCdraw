@@ -10,7 +10,7 @@ if __name__ == "__main__":
 
     expr = "f = a + (a * (a + (b) * (b) + (a * (a + (b)))))"
     # expr = "f = (a + b) and c"
-    tree = run.compiler(expr)
+    tree = run.compiler(expr, 1)
     print(tree)
 
     # tree.print_tree()

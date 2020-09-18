@@ -363,11 +363,11 @@ class Input(Widget):
         self.off_image = Image(source="img/port_off.png", size=self.size, pos=self.pos, allow_stretch=True)
         self.add_widget(self.off_image)
         self.bind(size=self._update_image, pos=self._update_image)
-        self.name = Label(text=self.node["name"], size=self.size, pos=[self.x, (self.y-self.size[1]/2)], color=[0,0,0,1])
+        self.name = Label(text=self.node["name"], size=self.size, pos=[self.x, (self.y-self.size[1]/1.2)], color=[0,0,0,1])
         self.add_widget(self.name)
         with self.canvas:
             Color(0, 0, 0)
-            self.line1 = Line(points=(x+self.size[0]/2, y+self.size[1]/1.3, x+self.size[0]/2, yWin + 70), width=1.2)
+            self.line1 = Line(points=(x+self.size[0]/2, y+self.size[1]/1.3, x+self.size[0]/2, y + yWin+50), width=1.2)
 
     def _update_image(self, instance, value):
         self.on_image.pos = instance.pos
@@ -404,6 +404,9 @@ class Output(Widget):
         self.size = size
         self.on_image = Image(source="img/port_on.png", size=self.size, pos=self.pos, allow_stretch=True)
         self.off_image = Image(source="img/port_off.png", size=self.size, pos=self.pos, allow_stretch=True)
+        self.name = Label(text=self.node["name"], size=self.size, pos=[self.x, (self.y - self.size[1] / 1.3)],
+                          color=[0, 0, 0, 1])
+        self.add_widget(self.name)
         self.add_widget(self.off_image)
         self.bind(size=self._update_image, pos=self._update_image)
 
@@ -510,7 +513,7 @@ class Circuit(Widget):
     def build_node(self, node):
         x = self.x + self.xIncr / 2 + (node["x"] * self.xIncr)
         y = self.y + 20 + node["y"] * self.yWin
-        size = (self.xWin / 25, self.yWin / 12)
+        size = (self.xWin / 20, self.yWin / 12)
         widget = ""
         if node["kind"] == "not":
             widget = Not(node, x, y, size)
@@ -537,6 +540,10 @@ class Circuit(Widget):
             print(node)
         return widget
 
+    def sim(self):
+        for i in self.inputs.keys():
+            self.inputs[i].state = True
+
 
 class Cir(Widget):
 
@@ -560,6 +567,10 @@ class Cir(Widget):
         self.rect.pos = instance.pos
         self.rect.size = instance.size
 
+    def on_touch_move(self, touch):
+        self.circuit.x += touch.dx
+        self.circuit.y += touch.dy
+
 
 if __name__ == "__main__":
     class TaskPanelApp(App):
@@ -569,7 +580,7 @@ if __name__ == "__main__":
 
 
     expr = "f = a * (b OR (NOT (c * (NOT i)))) xor (d | c | g) xor (s OR t) xor (NOT (a OR (NOT (u and p)))) and f"
-    tree = run.compiler(expr, False)
+    tree = run.compiler(expr, True)
     tree = json.loads(tree)
     print(tree)
-    TaskPanelApp().run()
+    # TaskPanelApp().run()
