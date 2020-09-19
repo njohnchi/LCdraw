@@ -45,11 +45,28 @@ class LogicInput(FloatLayout):
         self.rect.size = instance.size
 
 
-class Board(BoxLayout):
+class BoardCanvas(BoxLayout):
     def __init__(self, **kwargs):
-        super(Board, self).__init__(**kwargs)
+        super(BoardCanvas, self).__init__(**kwargs)
+        self.size_hint = (.94, .95)
+        self.pos_hint = {'x': .03, 'y': .05}
         with self.canvas.before:
             Color(1, 1, 1, 1)
+            self.rect = Rectangle(size=self.size, pos=self.pos)
+        self.bind(size=self._update_rect, pos=self._update_rect)
+
+    def _update_rect(self, instance, value):
+        self.rect.pos = instance.pos
+        self.rect.size = instance.size
+
+
+class Board(FloatLayout):
+    def __init__(self, **kwargs):
+        super(Board, self).__init__(**kwargs)
+        self.board_canvas = BoardCanvas()
+        self.add_widget(self.board_canvas)
+        with self.canvas.before:
+            Color(.2, .2, .2, 1)
             self.rect = Rectangle(size=self.size, pos=self.pos)
         self.bind(size=self._update_rect, pos=self._update_rect)
 
@@ -71,8 +88,6 @@ class LCDrawWidget(BoxLayout):
         self.add_widget(self.taskpanel)
         self.add_widget(self.logic_input)
         self.add_widget(self.board)
-
-
 
 
 class LCDrawApp(App):
