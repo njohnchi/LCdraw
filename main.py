@@ -7,6 +7,7 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.graphics import Color, Rectangle
 
 from taskpanel import TaskPanel
+from circuit import Circuit
 
 
 class Title(Label):
@@ -26,15 +27,40 @@ class Title(Label):
         self.rect.size = instance.size
 
 
+class BtnProceed(Button):
+
+    def __init__(self, **kwargs):
+        super(BtnProceed, self).__init__(**kwargs)
+        self.text = "Proceed"
+        self.pos_hint = {'x': .7, 'y': .2}
+        self.size_hint = (.2, .6)
+
+    def on_press(self):
+        task = self.parent.parent.taskpanel.panel.task
+        if task == "Simplify":
+            print(task)
+        elif task == "Circuit":
+            expr = self.parent.textinput.text
+            expr = "Y = " + expr
+            print(expr)
+            circuit = Circuit(expr, size=self.size)
+            self.parent.parent.board.board_canvas.clear_widgets()
+            self.parent.parent.board.board_canvas.add_widget(circuit)
+        elif task == "Truthtable":
+            print(task)
+        else:
+            print("Unknown task: ", task)
+
+
 class LogicInput(FloatLayout):
     def __init__(self, **kwargs):
         super(LogicInput, self).__init__(**kwargs)
         self.label = Label(text='Y = ', pos_hint={'x': .06, 'y': .2}, size_hint=(.05, .6), color=(1,1,1,1))
-        self.textinput = TextInput(text="Enter Expression", pos_hint={'x': .1, 'y': .2}, size_hint=(.6, .6))
-        self.process = Button(text="Process", pos_hint={'x': .7, 'y': .2}, size_hint=(.2, .6))
+        self.textinput = TextInput(pos_hint={'x': .1, 'y': .2}, size_hint=(.6, .6))
+        self.proceed = BtnProceed()
         self.add_widget(self.label)
         self.add_widget(self.textinput)
-        self.add_widget(self.process)
+        self.add_widget(self.proceed)
         with self.canvas.before:
             Color(0.2, 0.2, 0.2, 1)
             self.rect = Rectangle(size=self.size, pos=self.pos)

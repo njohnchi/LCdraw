@@ -365,7 +365,7 @@ class Input(Widget):
         self.bind(size=self._update_image, pos=self._update_image)
         self.name = Label(text=self.node["name"], size=self.size, pos=[self.x, (self.y-self.size[1]/1.2)], color=[0,0,0,1])
         self.add_widget(self.name)
-        with self.canvas:
+        with self.canvas.before:
             Color(0, 0, 0)
             self.line1 = Line(points=(x+self.size[0]/2, y+self.size[1]/1.3, x+self.size[0]/2, y + yWin+50), width=1.2)
 
@@ -449,7 +449,7 @@ class Wire(Widget):
             self.line3 = Line(points=(_b, b), width=1.2)
 
 
-class Circuit(Widget):
+class Cir(Widget):
     xIncr = NumericProperty(0)
     yIncr = NumericProperty(0)
     xWin = NumericProperty(0)
@@ -457,12 +457,8 @@ class Circuit(Widget):
     inputs = {}
 
     def __init__(self, tree, **kwargs):
-        super(Circuit, self).__init__(**kwargs)
+        super(Cir, self).__init__(**kwargs)
         self.tree = tree
-        with self.canvas.before:
-            Color(1, 1, 1, 1)
-            self.rect = Rectangle(size=self.size, pos=self.pos)
-        self.bind(size=self._update_rect, pos=self._update_rect)
         self.bind(size=self._update_win, pos=self._update_win)
 
     def _update_win(self, instance, value):
@@ -471,10 +467,6 @@ class Circuit(Widget):
         self.clear_widgets()
         self.inputs = {}
         self.build_tree()
-
-    def _update_rect(self, instance, value):
-        self.rect.pos = instance.pos
-        self.rect.size = instance.size
 
     def build_tree(self):
         self.xIncr = self.xWin / self.tree["depth"]
@@ -545,16 +537,14 @@ class Circuit(Widget):
             self.inputs[i].state = True
 
 
-class Cir(Widget):
+class Circuit(Widget):
 
-    def __init__(self, tree, **kwargs):
-        super(Cir, self).__init__(**kwargs)
-        self.circuit = Circuit(tree)
+    def __init__(self, expr, **kwargs):
+        super(Circuit, self).__init__(**kwargs)
+        self.tree = run.compiler(expr, False)
+        self.tree = json.loads(self.tree)
+        self.circuit = Cir(self.tree)
         self.add_widget(self.circuit)
-        with self.canvas.before:
-            Color(1, 1, 1, 1)
-            self.rect = Rectangle(size=self.size, pos=self.pos)
-        self.bind(size=self._update_rect, pos=self._update_rect)
         self.bind(size=self._update_win, pos=self._update_win)
 
     def _update_win(self, instance, value):
@@ -563,24 +553,16 @@ class Cir(Widget):
         self.circuit.x = instance.x + len(self.circuit.inputs) * self.circuit.width / 15
         self.circuit.y = instance.y + 50
 
-    def _update_rect(self, instance, value):
-        self.rect.pos = instance.pos
-        self.rect.size = instance.size
-
-    def on_touch_move(self, touch):
-        self.circuit.x += touch.dx
-        self.circuit.y += touch.dy
-
 
 if __name__ == "__main__":
     class TaskPanelApp(App):
         def build(self):
-            root = Cir(tree)
+            root = Circuit(expr)
             return root
 
 
     expr = "f = a * (b OR (NOT (c * (NOT i)))) xor (d | c | g) xor (s OR t) xor (NOT (a OR (NOT (u and p)))) and f"
-    tree = run.compiler(expr, True)
-    tree = json.loads(tree)
-    print(tree)
-    # TaskPanelApp().run()
+    # tree = run.compiler(expr, True)
+    # tree = json.loads(tree)
+    # print(tree)
+    TaskPanelApp().run()
