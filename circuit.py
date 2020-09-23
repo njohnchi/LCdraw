@@ -545,6 +545,7 @@ class Circuit(Widget):
         self.tree = json.loads(self.tree)
         self.circuit = Cir(self.tree)
         self.add_widget(self.circuit)
+        self.size_hint = (None, None)
         self.bind(size=self._update_win, pos=self._update_win)
 
     def _update_win(self, instance, value):
@@ -552,10 +553,16 @@ class Circuit(Widget):
         self.circuit.height = instance.height * 0.9
         self.circuit.x = instance.x + len(self.circuit.inputs) * self.circuit.width / 15
         self.circuit.y = instance.y + 50
+        self.run_sim()
+
+    def run_sim(self):
+        for i in self.circuit.inputs:
+            self.circuit.inputs[i].state = True
+        return
 
 
 if __name__ == "__main__":
-    class TaskPanelApp(App):
+    class CircuitApp(App):
         def build(self):
             root = Circuit(expr)
             return root
@@ -565,4 +572,4 @@ if __name__ == "__main__":
     # tree = run.compiler(expr, True)
     # tree = json.loads(tree)
     # print(tree)
-    TaskPanelApp().run()
+    CircuitApp().run()

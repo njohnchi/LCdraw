@@ -49,6 +49,7 @@ class Simplify(Task):
     def __init__(self, **kwargs):
         super(Simplify, self).__init__(**kwargs)
         self.text = "Simplify"
+        self.is_active = True
 
 
 class DrawCircuit(Task):

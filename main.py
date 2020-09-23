@@ -5,6 +5,9 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivy.graphics import Color, Rectangle
+from kivy.uix.scrollview import ScrollView
+from kivy.uix.slider import Slider
+from kivy.clock import Clock
 
 from taskpanel import TaskPanel
 from circuit import Circuit
@@ -35,22 +38,6 @@ class BtnProceed(Button):
         self.pos_hint = {'x': .7, 'y': .2}
         self.size_hint = (.2, .6)
 
-    def on_press(self):
-        task = self.parent.parent.taskpanel.panel.task
-        if task == "Simplify":
-            print(task)
-        elif task == "Circuit":
-            expr = self.parent.textinput.text
-            expr = "Y = " + expr
-            print(expr)
-            circuit = Circuit(expr, size=self.size)
-            self.parent.parent.board.board_canvas.clear_widgets()
-            self.parent.parent.board.board_canvas.add_widget(circuit)
-        elif task == "Truthtable":
-            print(task)
-        else:
-            print("Unknown task: ", task)
-
 
 class LogicInput(FloatLayout):
     def __init__(self, **kwargs):
@@ -71,26 +58,45 @@ class LogicInput(FloatLayout):
         self.rect.size = instance.size
 
 
-class BoardCanvas(BoxLayout):
+class BoardCanvas(ScrollView):
     def __init__(self, **kwargs):
         super(BoardCanvas, self).__init__(**kwargs)
-        self.size_hint = (.94, .95)
+        self.size_hint = (.9, .95)
         self.pos_hint = {'x': .03, 'y': .05}
+        self.effect_cls = "ScrollEffect"
+        self.bar_width = 10
+        self.scroll_type = ["bars", "content"]
         with self.canvas.before:
             Color(1, 1, 1, 1)
             self.rect = Rectangle(size=self.size, pos=self.pos)
         self.bind(size=self._update_rect, pos=self._update_rect)
+        # self.size = (Window.width, Window.height)
+        self.do_scroll_x: True
+        self.do_scroll_y: True
 
     def _update_rect(self, instance, value):
         self.rect.pos = instance.pos
         self.rect.size = instance.size
 
 
+class BoardSlider(Slider):
+    def __init__(self, **kwargs):
+        super(BoardSlider, self).__init__(**kwargs)
+        self.size_hint = (.05, .95)
+        self.pos_hint = {'x': .93, 'y': .05}
+        self.min = 0.5
+        self.max = 2
+        self.value = 1
+        self.orientation = 'vertical'
+
+
 class Board(FloatLayout):
     def __init__(self, **kwargs):
         super(Board, self).__init__(**kwargs)
         self.board_canvas = BoardCanvas()
+        self.slider = BoardSlider()
         self.add_widget(self.board_canvas)
+        self.add_widget(self.slider)
         with self.canvas.before:
             Color(.2, .2, .2, 1)
             self.rect = Rectangle(size=self.size, pos=self.pos)
@@ -114,6 +120,41 @@ class LCDrawWidget(BoxLayout):
         self.add_widget(self.taskpanel)
         self.add_widget(self.logic_input)
         self.add_widget(self.board)
+        self.logic_input.proceed.bind(on_press=self._perform_task)
+        self.board.slider.bind(value=self._zoom_canvas)
+
+    def _zoom_canvas(self, instance, value):
+        if not self.board.board_canvas.children:
+            return
+        else:
+            self.board.board_canvas.children[0].width = self.board.board_canvas.width * value
+            self.board.board_canvas.children[0].height = self.board.board_canvas.height * value
+
+    def _perform_task(self, instance):
+            task = self.taskpanel.panel.task
+            expr = self.logic_input.textinput.text
+            if task == "Simplify":
+                self.simplify(expr)
+            elif task == "Circuit":
+                self.draw_circuit(expr)
+            elif task == "Truthtable":
+                self.draw_truthtable(expr)
+            else:
+                print("Unknown task: ", task)
+
+    def simplify(self, expr):
+        print(expr)
+
+    def draw_circuit(self, expr):
+        print(expr)
+        expr = "Y = " + expr
+        circuit = Circuit(expr, size=self.board.board_canvas.size)
+        self.board.board_canvas.clear_widgets()
+        self.board.board_canvas.add_widget(circuit)
+        # Clock.schedule_once(circuit.run_sim, 0.1)
+
+    def draw_truthtable(self, expr):
+        print(expr)
 
 
 class LCDrawApp(App):
