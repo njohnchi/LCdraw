@@ -15,6 +15,7 @@ import json
 class Not(Widget):
     state = BooleanProperty(False)
     nodes = ListProperty([])
+    sim_nodes = ListProperty([])
 
     def __init__(self, node, x, y, size, **kwargs):
         super(Not, self).__init__(**kwargs)
@@ -35,7 +36,6 @@ class Not(Widget):
     def update_node(self, instance, value):
         x = instance.x + instance.xIncr / 2 + (self.node["x"] * instance.xIncr)
         y = instance.y + 20 + self.node["y"] * instance.yWin
-        print(instance.yWin)
         size = (instance.xWin / 20, instance.yWin / 12)
         self.pos = (x, y)
         self.size = size
@@ -54,17 +54,18 @@ class Not(Widget):
     def out_pin(self):
         return [(self.pos[0], self.pos[1] + self.size[1] / 2)]
 
-    def on_nodes(self, instance, value):
-        for i in self.nodes:
+    def on_sim_nodes(self, instance, value):
+        for i in self.sim_nodes:
             i.bind(state=self.up_nod)
 
     def up_nod(self, instance, value):
-        self.state = not self.nodes[0].state
+        self.state = not self.sim_nodes[0].state
 
 
 class And(Widget):
     state = BooleanProperty(False)
     nodes = ListProperty([])
+    sim_nodes = ListProperty([])
 
     def __init__(self, node, x, y, size, **kwargs):
         super(And, self).__init__(**kwargs)
@@ -107,20 +108,21 @@ class And(Widget):
             points.extend([(self.pos[0], self.pos[1] + offset * (i + 1))])
         return points
 
-    def on_nodes(self, instance, value):
-        for i in self.nodes:
+    def on_sim_nodes(self, instance, value):
+        for i in self.sim_nodes:
             i.bind(state=self.up_nod)
 
     def up_nod(self, instance, value):
-        s = self.nodes[0].state
-        for i in range(len(self.nodes) - 1):
-            s = s and self.nodes[i + 1].state
+        s = self.sim_nodes[0].state
+        for i in range(len(self.sim_nodes) - 1):
+            s = s and self.sim_nodes[i + 1].state
         self.state = s
 
 
 class Nand(Widget):
     state = BooleanProperty(False)
     nodes = ListProperty([])
+    sim_nodes = ListProperty([])
 
     def __init__(self, node, x, y, size, **kwargs):
         super(Nand, self).__init__(**kwargs)
@@ -163,20 +165,21 @@ class Nand(Widget):
             points.extend([(self.pos[0], self.pos[1] + offset * (i + 1))])
         return points
 
-    def on_nodes(self, instance, value):
-        for i in self.nodes:
+    def on_sim_nodes(self, instance, value):
+        for i in self.sim_nodes:
             i.bind(state=self.up_nod)
 
     def up_nod(self, instance, value):
-        s = self.nodes[0].state
-        for i in range(len(self.nodes) - 1):
-            s = s and self.nodes[i + 1].state
+        s = self.sim_nodes[0].state
+        for i in range(len(self.sim_nodes) - 1):
+            s = s and self.sim_nodes[i + 1].state
         self.state = not s
 
 
 class Or(Widget):
     state = BooleanProperty(False)
     nodes = ListProperty([])
+    sim_nodes = ListProperty([])
 
     def __init__(self, node, x, y, size, **kwargs):
         super(Or, self).__init__(**kwargs)
@@ -219,20 +222,21 @@ class Or(Widget):
             points.extend([(self.pos[0] + (self.size[0]/4.8), self.pos[1] + offset * (i + 1))])
         return points
 
-    def on_nodes(self, instance, value):
-        for i in self.nodes:
+    def on_sim_nodes(self, instance, value):
+        for i in self.sim_nodes:
             i.bind(state=self.up_nod)
 
     def up_nod(self, instance, value):
-        s = self.nodes[0].state
-        for i in range(len(self.nodes) - 1):
-            s = s or self.nodes[i + 1].state
+        s = self.sim_nodes[0].state
+        for i in range(len(self.sim_nodes) - 1):
+            s = s or self.sim_nodes[i + 1].state
         self.state = s
 
 
 class Nor(Widget):
     state = BooleanProperty(False)
     nodes = ListProperty([])
+    sim_nodes = ListProperty([])
 
     def __init__(self, node, x, y, size, **kwargs):
         super(Nor, self).__init__(**kwargs)
@@ -275,20 +279,21 @@ class Nor(Widget):
             points.extend([(self.pos[0] + (self.size[0]/4.8), self.pos[1] + offset * (i + 1))])
         return points
 
-    def on_nodes(self, instance, value):
-        for i in self.nodes:
+    def on_sim_nodes(self, instance, value):
+        for i in self.sim_nodes:
             i.bind(state=self.up_nod)
 
     def up_nod(self, instance, value):
-        s = self.nodes[0].state
-        for i in range(len(self.nodes) - 1):
-            s = s or self.nodes[i + 1].state
+        s = self.sim_nodes[0].state
+        for i in range(len(self.sim_nodes) - 1):
+            s = s or self.sim_nodes[i + 1].state
         self.state = not s
 
 
 class Xor(Widget):
     state = BooleanProperty(False)
     nodes = ListProperty([])
+    sim_nodes = ListProperty([])
 
     def __init__(self, node, x, y, size, **kwargs):
         super(Xor, self).__init__(**kwargs)
@@ -331,20 +336,21 @@ class Xor(Widget):
             points.extend([(self.pos[0] + (self.size[0]/5), self.pos[1] + offset * (i + 1))])
         return points
 
-    def on_nodes(self, instance, value):
-        for i in self.nodes:
+    def on_sim_nodes(self, instance, value):
+        for i in self.sim_nodes:
             i.bind(state=self.up_nod)
 
     def up_nod(self, instance, value):
-        s = self.nodes[0].state
-        for i in range(len(self.nodes) - 1):
-            s = s ^ self.nodes[i + 1].state
+        s = self.sim_nodes[0].state
+        for i in range(len(self.sim_nodes) - 1):
+            s = s ^ self.sim_nodes[i + 1].state
         self.state = s
 
 
 class Nxor(Widget):
     state = BooleanProperty(False)
     nodes = ListProperty([])
+    sim_nodes = ListProperty([])
 
     def __init__(self, node, x, y, size, **kwargs):
         super(Nxor, self).__init__(**kwargs)
@@ -387,20 +393,21 @@ class Nxor(Widget):
             points.extend([(self.pos[0] + (self.size[0]/5), self.pos[1] + offset * (i + 1))])
         return points
 
-    def on_nodes(self, instance, value):
-        for i in self.nodes:
+    def on_sim_nodes(self, instance, value):
+        for i in self.sim_nodes:
             i.bind(state=self.up_nod)
 
     def up_nod(self, instance, value):
-        s = self.nodes[0].state
-        for i in range(len(self.nodes) - 1):
-            s = s ^ self.nodes[i + 1].state
+        s = self.sim_nodes[0].state
+        for i in range(len(self.sim_nodes) - 1):
+            s = s ^ self.sim_nodes[i + 1].state
         self.state = not s
 
 
 class Input(Widget):
     state = BooleanProperty(False)
     nodes = ListProperty([])
+    sim_nodes = ListProperty([])
 
     def __init__(self, node, x, y, size, yWin, index, **kwargs):
         super(Input, self).__init__(**kwargs)
@@ -455,6 +462,7 @@ class Input(Widget):
 class Output(Widget):
     state = BooleanProperty(False)
     nodes = ListProperty([])
+    sim_nodes = ListProperty([])
 
     def __init__(self, node, x, y, size, **kwargs):
         super(Output, self).__init__(**kwargs)
@@ -483,24 +491,27 @@ class Output(Widget):
         self.size = size
         self.name.size = self.size
         self.name.pos = [self.x, (self.y - self.size[1] / 1.3)]
+        print(self.name.pos)
 
     def on_state(self, instance, value):
         if self.state:
             self.clear_widgets()
             self.add_widget(self.on_image)
+            self.add_widget(self.name)
         else:
             self.clear_widgets()
             self.add_widget(self.off_image)
+            self.add_widget(self.name)
 
     def out_pin(self):
         return [(self.pos[0], self.pos[1] + self.size[1] / 2)]
 
-    def on_nodes(self, instance, value):
-        for i in self.nodes:
+    def on_sim_nodes(self, instance, value):
+        for i in self.sim_nodes:
             i.bind(state=self.up_nod)
 
     def up_nod(self, instance, value):
-        self.state = self.nodes[0].state
+        self.state = self.sim_nodes[0].state
 
 
 class Wire(Widget):
@@ -520,15 +531,9 @@ class Wire(Widget):
 
     def update_wire(self, instance, value):
         parent = instance.parent_node
-        # print("p ", parent.nodes)
-        # print("w ", instance)
-        print("se", self)
-        print("wi", instance)
         for i in range(len(parent.nodes)):
-            print("ps ", parent.nodes[i])
             if parent.nodes[i] == instance:
                 inst = parent.nodes[i]
-                print("true")
                 o = i
                 if i >= len(parent.nodes) / 2:
                     o = len(parent.nodes) - i - 1
@@ -551,10 +556,6 @@ class Wire(Widget):
                     self.line1.points = (a, _a)
                     self.line2.points = (_a, _b)
                     self.line3.points = (_b, b)
-            elif parent.nodes[i].node["name"] == instance.node["name"]:
-                print("prr ", parent)
-            else:
-                print(False)
 
 
 class Cir(Widget):
@@ -592,12 +593,9 @@ class Cir(Widget):
                 self.add_widget(widget)
             else:
                 widget = self.inputs[node["name"]]
-            print(wid.node["y"])
             x = self.x + self.xIncr / 2 + (node["x"] * self.xIncr)
             y = self.y + 20 + node["y"] * self.yWin
             wire = Wire((x, y), outpin, o)
-            print("wire ", wire)
-            print("wid", wid)
             # self.add_widget(wire)
             # widget.bind(pos=wire.update_wire)
             # wire = Wire((x, y), widget.in_pin(y), o)
@@ -607,11 +605,11 @@ class Cir(Widget):
             self.add_widget(widget)
             if outpin:
                 wire = Wire(widget.in_pin(), outpin, o)
-                print("wire n ,", wire)
                 self.add_widget(wire)
                 wid.bind(pos=wire.update_wire, size=wire.update_wire)
         if parent:
             parent.nodes.append(wid)
+            parent.sim_nodes.append(widget)
             # widget.parent_node = parent
             wid.parent_node = parent
 
