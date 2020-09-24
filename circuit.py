@@ -6,6 +6,7 @@ from kivy.properties import NumericProperty, StringProperty, ReferenceListProper
 from kivy.graphics import Rectangle, Color, Line
 from kivy.uix.image import Image
 from kivy.properties import ObjectProperty
+from kivy.clock import Clock
 
 from compiler import run
 import json
@@ -30,6 +31,14 @@ class Not(Widget):
         self.on_image.size = instance.size
         self.off_image.pos = instance.pos
         self.off_image.size = instance.size
+
+    def update_node(self, instance, value):
+        x = instance.x + instance.xIncr / 2 + (self.node["x"] * instance.xIncr)
+        y = instance.y + 20 + self.node["y"] * instance.yWin
+        print(instance.yWin)
+        size = (instance.xWin / 20, instance.yWin / 12)
+        self.pos = (x, y)
+        self.size = size
 
     def on_state(self, instance, value):
         if self.state:
@@ -73,6 +82,13 @@ class And(Widget):
         self.off_image.pos = instance.pos
         self.off_image.size = instance.size
 
+    def update_node(self, instance, value):
+        x = instance.x + instance.xIncr / 2 + (self.node["x"] * instance.xIncr)
+        y = instance.y + 20 + self.node["y"] * instance.yWin
+        size = (instance.xWin / 20, instance.yWin / 12)
+        self.pos = (x, y)
+        self.size = (size[0] + (size[0] / 5) * (self.node["inputs"] - 2), size[1] + (size[1] / 5) * (self.node["inputs"] - 2))
+
     def on_state(self, instance, value):
         if self.state:
             self.clear_widgets()
@@ -109,7 +125,6 @@ class Nand(Widget):
     def __init__(self, node, x, y, size, **kwargs):
         super(Nand, self).__init__(**kwargs)
         self.node = node
-        self.text = "Or"
         self.pos = (x, y)
         self.size = (size[0]+(size[0]/5)*(self.node["inputs"] - 2), size[1]+(size[1]/5)*(self.node["inputs"] - 2))
         self.on_image = Image(source="img/nand_on.png", size=self.size, pos=self.pos, allow_stretch=True)
@@ -122,6 +137,13 @@ class Nand(Widget):
         self.on_image.size = instance.size
         self.off_image.pos = instance.pos
         self.off_image.size = instance.size
+
+    def update_node(self, instance, value):
+        x = instance.x + instance.xIncr / 2 + (self.node["x"] * instance.xIncr)
+        y = instance.y + 20 + self.node["y"] * instance.yWin
+        size = (instance.xWin / 20, instance.yWin / 12)
+        self.pos = (x, y)
+        self.size = (size[0] + (size[0] / 5) * (self.node["inputs"] - 2), size[1] + (size[1] / 5) * (self.node["inputs"] - 2))
 
     def on_state(self, instance, value):
         if self.state:
@@ -159,7 +181,6 @@ class Or(Widget):
     def __init__(self, node, x, y, size, **kwargs):
         super(Or, self).__init__(**kwargs)
         self.node = node
-        self.text = "Or"
         self.pos = (x, y)
         self.size = (size[0]+(size[0]/5)*(self.node["inputs"] - 2), size[1]+(size[1]/5)*(self.node["inputs"] - 2))
         self.on_image = Image(source="img/or_on.png", size=self.size, pos=self.pos, allow_stretch=True)
@@ -172,6 +193,13 @@ class Or(Widget):
         self.on_image.size = instance.size
         self.off_image.pos = instance.pos
         self.off_image.size = instance.size
+
+    def update_node(self, instance, value):
+        x = instance.x + instance.xIncr / 2 + (self.node["x"] * instance.xIncr)
+        y = instance.y + 20 + self.node["y"] * instance.yWin
+        size = (instance.xWin / 20, instance.yWin / 12)
+        self.pos = (x, y)
+        self.size = (size[0] + (size[0] / 5) * (self.node["inputs"] - 2), size[1] + (size[1] / 5) * (self.node["inputs"] - 2))
 
     def on_state(self, instance, value):
         if self.state:
@@ -222,6 +250,13 @@ class Nor(Widget):
         self.off_image.pos = instance.pos
         self.off_image.size = instance.size
 
+    def update_node(self, instance, value):
+        x = instance.x + instance.xIncr / 2 + (self.node["x"] * instance.xIncr)
+        y = instance.y + 20 + self.node["y"] * instance.yWin
+        size = (instance.xWin / 20, instance.yWin / 12)
+        self.pos = (x, y)
+        self.size = (size[0] + (size[0] / 5) * (self.node["inputs"] - 2), size[1] + (size[1] / 5) * (self.node["inputs"] - 2))
+
     def on_state(self, instance, value):
         if self.state:
             self.clear_widgets()
@@ -258,7 +293,6 @@ class Xor(Widget):
     def __init__(self, node, x, y, size, **kwargs):
         super(Xor, self).__init__(**kwargs)
         self.node = node
-        self.text = "Or"
         self.pos = (x, y)
         self.size = (size[0]+(size[0]/5)*(self.node["inputs"] - 2), size[1]+(size[1]/5)*(self.node["inputs"] - 2))
         self.on_image = Image(source="img/xor_on.png", size=self.size, pos=self.pos, allow_stretch=True)
@@ -271,6 +305,13 @@ class Xor(Widget):
         self.on_image.size = instance.size
         self.off_image.pos = instance.pos
         self.off_image.size = instance.size
+
+    def update_node(self, instance, value):
+        x = instance.x + instance.xIncr / 2 + (self.node["x"] * instance.xIncr)
+        y = instance.y + 20 + self.node["y"] * instance.yWin
+        size = (instance.xWin / 20, instance.yWin / 12)
+        self.pos = (x, y)
+        self.size = (size[0] + (size[0] / 5) * (self.node["inputs"] - 2), size[1] + (size[1] / 5) * (self.node["inputs"] - 2))
 
     def on_state(self, instance, value):
         if self.state:
@@ -321,6 +362,13 @@ class Nxor(Widget):
         self.off_image.pos = instance.pos
         self.off_image.size = instance.size
 
+    def update_node(self, instance, value):
+        x = instance.x + instance.xIncr / 2 + (self.node["x"] * instance.xIncr)
+        y = instance.y + 20 + self.node["y"] * instance.yWin
+        size = (instance.xWin / 20, instance.yWin / 12)
+        self.pos = (x, y)
+        self.size = (size[0] + (size[0] / 5) * (self.node["inputs"] - 2), size[1] + (size[1] / 5) * (self.node["inputs"] - 2))
+
     def on_state(self, instance, value):
         if self.state:
             self.clear_widgets()
@@ -354,9 +402,10 @@ class Input(Widget):
     state = BooleanProperty(False)
     nodes = ListProperty([])
 
-    def __init__(self, node, x, y, size, yWin, **kwargs):
+    def __init__(self, node, x, y, size, yWin, index, **kwargs):
         super(Input, self).__init__(**kwargs)
         self.node = node
+        self.index = index
         self.pos = (x, y)
         self.size = size
         self.on_image = Image(source="img/port_on.png", size=self.size, pos=self.pos, allow_stretch=True)
@@ -374,6 +423,16 @@ class Input(Widget):
         self.on_image.size = instance.size
         self.off_image.pos = instance.pos
         self.off_image.size = instance.size
+
+    def update_node(self, instance, value):
+        x = instance.x - self.index * instance.width / 15
+        y = instance.y - 20
+        size = (instance.xWin / 20, instance.yWin / 12)
+        self.pos = (x, y)
+        self.size = size
+        self.line1.points = (x + self.size[0] / 2, y + self.size[1] / 1.3, x + self.size[0] / 2, y + instance.yWin + 50)
+        self.name.size = self.size
+        self.name.pos = [self.x, (self.y - self.size[1] / 1.2)]
 
     def on_state(self, instance, value):
         if self.state:
@@ -404,17 +463,26 @@ class Output(Widget):
         self.size = size
         self.on_image = Image(source="img/port_on.png", size=self.size, pos=self.pos, allow_stretch=True)
         self.off_image = Image(source="img/port_off.png", size=self.size, pos=self.pos, allow_stretch=True)
+        self.add_widget(self.off_image)
+        self.bind(size=self._update_image, pos=self._update_image)
         self.name = Label(text=self.node["name"], size=self.size, pos=[self.x, (self.y - self.size[1] / 1.3)],
                           color=[0, 0, 0, 1])
         self.add_widget(self.name)
-        self.add_widget(self.off_image)
-        self.bind(size=self._update_image, pos=self._update_image)
 
     def _update_image(self, instance, value):
         self.on_image.pos = instance.pos
         self.on_image.size = instance.size
         self.off_image.pos = instance.pos
         self.off_image.size = instance.size
+
+    def update_node(self, instance, value):
+        x = instance.x + instance.xIncr / 2 + (self.node["x"] * instance.xIncr)
+        y = instance.y + 20 + self.node["y"] * instance.yWin
+        size = (instance.xWin / 20, instance.yWin / 12)
+        self.pos = (x, y)
+        self.size = size
+        self.name.size = self.size
+        self.name.pos = [self.x, (self.y - self.size[1] / 1.3)]
 
     def on_state(self, instance, value):
         if self.state:
@@ -436,6 +504,8 @@ class Output(Widget):
 
 
 class Wire(Widget):
+    start = ListProperty([])
+    stop = ListProperty([])
 
     def __init__(self, a, b, o, **kwargs):
         super(Wire, self).__init__(**kwargs)
@@ -448,59 +518,108 @@ class Wire(Widget):
             self.line2 = Line(points=(_a, _b), width=1.2)
             self.line3 = Line(points=(_b, b), width=1.2)
 
+    def update_wire(self, instance, value):
+        parent = instance.parent_node
+        # print("p ", parent.nodes)
+        # print("w ", instance)
+        print("se", self)
+        print("wi", instance)
+        for i in range(len(parent.nodes)):
+            print("ps ", parent.nodes[i])
+            if parent.nodes[i] == instance:
+                inst = parent.nodes[i]
+                print("true")
+                o = i
+                if i >= len(parent.nodes) / 2:
+                    o = len(parent.nodes) - i - 1
+                b = parent.out_pin()[i]
+                if instance.node["kind"] == "input":
+                    _x = self.parent.x + self.parent.xIncr / 2 + (instance.node["x"] * self.parent.xIncr)
+                    y = self.parent.y + 20 + instance.node["y"] * self.parent.yWin
+                    a = self.parent.inputs[instance.node["name"]].in_pin(y)
+                    x = _x - (o * 15) + (b[0] - _x) / 2
+                    _a = (x, a[1])
+                    _b = (x, b[1])
+                    self.line1.points = (a, _a)
+                    self.line2.points = (_a, _b)
+                    self.line3.points = (_b, b)
+                else:
+                    a = instance.in_pin()
+                    x = a[0] - (o * 15) + (b[0] - a[0]) / 2
+                    _a = (x, a[1])
+                    _b = (x, b[1])
+                    self.line1.points = (a, _a)
+                    self.line2.points = (_a, _b)
+                    self.line3.points = (_b, b)
+            elif parent.nodes[i].node["name"] == instance.node["name"]:
+                print("prr ", parent)
+            else:
+                print(False)
+
 
 class Cir(Widget):
     xIncr = NumericProperty(0)
     yIncr = NumericProperty(0)
     xWin = NumericProperty(0)
     yWin = NumericProperty(0)
-    inputs = {}
 
     def __init__(self, tree, **kwargs):
         super(Cir, self).__init__(**kwargs)
         self.tree = tree
+        self.inputs = {}
+        self.build_tree()
         self.bind(size=self._update_win, pos=self._update_win)
 
     def _update_win(self, instance, value):
         self.xWin = instance.size[0]
         self.yWin = instance.size[1] * 0.9
-        self.clear_widgets()
-        self.inputs = {}
-        self.build_tree()
-
-    def build_tree(self):
         self.xIncr = self.xWin / self.tree["depth"]
         self.yIncr = self.yWin / self.tree["weight"]
+        # self.clear_widgets()
+        # self.inputs = {}
+        # self.build_tree()
+
+    def build_tree(self):
         for i in self.tree["nodes"]:
             self.draw_node(i, False, 0, False)
 
     def draw_node(self, node, outpin, o, parent):
         widget = self.build_node(node)
+        wid = widget
         if node["kind"] == "input":
             if node["name"] not in self.inputs.keys():
                 self.inputs[node["name"]] = widget
                 self.add_widget(widget)
             else:
                 widget = self.inputs[node["name"]]
+            print(wid.node["y"])
             x = self.x + self.xIncr / 2 + (node["x"] * self.xIncr)
             y = self.y + 20 + node["y"] * self.yWin
             wire = Wire((x, y), outpin, o)
+            print("wire ", wire)
+            print("wid", wid)
+            # self.add_widget(wire)
+            # widget.bind(pos=wire.update_wire)
+            # wire = Wire((x, y), widget.in_pin(y), o)
             self.add_widget(wire)
-            wire = Wire((x, y), widget.in_pin(y), o)
-            self.add_widget(wire)
+            wid.bind(pos=wire.update_wire, size=wire.update_wire)
         else:
             self.add_widget(widget)
             if outpin:
                 wire = Wire(widget.in_pin(), outpin, o)
+                print("wire n ,", wire)
                 self.add_widget(wire)
+                wid.bind(pos=wire.update_wire, size=wire.update_wire)
         if parent:
-            parent.nodes.append(widget)
+            parent.nodes.append(wid)
+            # widget.parent_node = parent
+            wid.parent_node = parent
 
         for i in range(node["inputs"]):
             o = i
             if i >= node["inputs"] / 2:
                 o = node["inputs"] - i - 1
-            self.draw_node(node["nodes"][i], widget.out_pin()[i], o, widget)
+            self.draw_node(node["nodes"][i], widget.out_pin()[i], o, wid)
 
     def build_node(self, node):
         x = self.x + self.xIncr / 2 + (node["x"] * self.xIncr)
@@ -509,32 +628,38 @@ class Cir(Widget):
         widget = ""
         if node["kind"] == "not":
             widget = Not(node, x, y, size)
+            self.bind(size=widget.update_node, pos=widget.update_node)
         elif node["kind"] == "and":
             widget = And(node, x, y, size)
+            self.bind(size=widget.update_node, pos=widget.update_node)
         elif node["kind"] == "nand":
             widget = Nand(node, x, y, size)
+            self.bind(size=widget.update_node, pos=widget.update_node)
         elif node["kind"] == "or":
             widget = Or(node, x, y, size)
+            self.bind(size=widget.update_node, pos=widget.update_node)
         elif node["kind"] == "nor":
             widget = Nor(node, x, y, size)
+            self.bind(size=widget.update_node, pos=widget.update_node)
         elif node["kind"] == "xor":
             widget = Xor(node, x, y, size)
+            self.bind(size=widget.update_node, pos=widget.update_node)
         elif node["kind"] == "nxor":
             widget = Nxor(node, x, y, size)
+            self.bind(size=widget.update_node, pos=widget.update_node)
         elif node["kind"] == "input":
             x = self.x - len(self.inputs) * self.width / 15
             y = self.y - 20
-            widget = Input(node, x, y, size, self.yWin)
+            index = len(self.inputs)
+            widget = Input(node, x, y, size, self.yWin, index)
+            self.bind(size=widget.update_node, pos=widget.update_node)
         elif node["kind"] == "output":
             widget = Output(node, x, y, size)
+            self.bind(size=widget.update_node, pos=widget.update_node)
         else:
             print("unknown node object")
             print(node)
         return widget
-
-    def sim(self):
-        for i in self.inputs.keys():
-            self.inputs[i].state = True
 
 
 class Circuit(Widget):
@@ -547,15 +672,15 @@ class Circuit(Widget):
         self.add_widget(self.circuit)
         self.size_hint = (None, None)
         self.bind(size=self._update_win, pos=self._update_win)
+        Clock.schedule_once(self.run_sim, 0.1)
 
     def _update_win(self, instance, value):
         self.circuit.width = instance.width * 0.55
         self.circuit.height = instance.height * 0.9
         self.circuit.x = instance.x + len(self.circuit.inputs) * self.circuit.width / 15
         self.circuit.y = instance.y + 50
-        self.run_sim()
 
-    def run_sim(self):
+    def run_sim(self, dt):
         for i in self.circuit.inputs:
             self.circuit.inputs[i].state = True
         return
