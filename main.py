@@ -11,6 +11,8 @@ from kivy.clock import Clock
 
 from taskpanel import TaskPanel
 from circuit import Circuit
+from truthtable import TruthTable
+import boolean as boolean
 
 
 class Title(Label):
@@ -143,10 +145,12 @@ class LCDrawWidget(BoxLayout):
                 print("Unknown task: ", task)
 
     def simplify(self, expr):
-        print(expr)
+        sim_exp = boolean.parse(expr)
+        exp = Label(text=str(sim_exp), pos=self.pos, size=self.size, font_size=75, color=[0, 0, 0, 1])
+        self.board.board_canvas.clear_widgets()
+        self.board.board_canvas.add_widget(exp)
 
     def draw_circuit(self, expr):
-        print(expr)
         expr = "Y = " + expr
         circuit = Circuit(expr, size=self.board.board_canvas.size)
         self.board.board_canvas.clear_widgets()
@@ -154,7 +158,9 @@ class LCDrawWidget(BoxLayout):
         # Clock.schedule_once(circuit.run_sim, 0.1)
 
     def draw_truthtable(self, expr):
-        print(expr)
+        truthtable = TruthTable(expr, "Y", size=self.board.board_canvas.size)
+        self.board.board_canvas.clear_widgets()
+        self.board.board_canvas.add_widget(truthtable)
 
 
 class LCDrawApp(App):
