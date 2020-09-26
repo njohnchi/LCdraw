@@ -1,13 +1,13 @@
 from kivy.app import App
 from kivy.uix.button import Button
-from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
-from kivy.graphics import Color, Rectangle, BorderImage
+from kivy.graphics import Color, Rectangle
 from kivy.uix.image import Image
 from kivy.properties import BooleanProperty, StringProperty
 
 
 class Task(Button):
+    # true if task is selected
     is_active = BooleanProperty(False)
 
     def __init__(self, **kwargs):
@@ -35,17 +35,15 @@ class Task(Button):
 
 
 class Icon(BoxLayout):
-
     def __init__(self, **kwargs):
         super(Icon, self).__init__(**kwargs)
         self.size_hint_x = None
         self.width = 50
-        self.image = Image(source="img/not_on.png", size=self.size, pos=self.pos, allow_stretch=True)
+        self.image = Image(source="img/icon.png", size=self.size, pos=self.pos, allow_stretch=True)
         self.add_widget(self.image)
 
 
 class Simplify(Task):
-
     def __init__(self, **kwargs):
         super(Simplify, self).__init__(**kwargs)
         self.text = "Simplify"
@@ -53,21 +51,18 @@ class Simplify(Task):
 
 
 class DrawCircuit(Task):
-
     def __init__(self, **kwargs):
         super(DrawCircuit, self).__init__(**kwargs)
         self.text = "Circuit"
 
 
 class DrawTruthtable(Task):
-
     def __init__(self, **kwargs):
         super(DrawTruthtable, self).__init__(**kwargs)
         self.text = "Truthtable"
 
 
 class Help(Task):
-
     def __init__(self, **kwargs):
         super(Help, self).__init__(**kwargs)
         self.text = "Help"
@@ -99,6 +94,7 @@ class Panel(BoxLayout):
         self.rect.pos = instance.pos
         self.rect.size = instance.size
 
+    # select and set task to perform
     def on_task(self, instance, value):
         self.simplify.is_active = False
         self.drawcircuit.is_active = False
@@ -113,11 +109,10 @@ class Panel(BoxLayout):
         elif self.task == "Help":
             self.help.is_active = True
         else:
-            print("Unknown task: ", self.task)
+            raise TypeError("Unknowwn Task or not a task: {}".format(self.task))
 
 
 class TaskPanel(BoxLayout):
-
     def __init__(self, **kwargs):
         super(TaskPanel, self).__init__(**kwargs)
         self.panel = Panel()

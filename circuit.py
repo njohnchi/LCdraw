@@ -1,11 +1,9 @@
 from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.uix.label import Label
-from kivy.lang.builder import Builder
-from kivy.properties import NumericProperty, StringProperty, ReferenceListProperty, ListProperty, BooleanProperty
-from kivy.graphics import Rectangle, Color, Line
+from kivy.properties import NumericProperty, ListProperty, BooleanProperty
+from kivy.graphics import Color, Line
 from kivy.uix.image import Image
-from kivy.properties import ObjectProperty
 from kivy.clock import Clock
 
 from compiler import run
@@ -56,9 +54,9 @@ class Not(Widget):
 
     def on_sim_nodes(self, instance, value):
         for i in self.sim_nodes:
-            i.bind(state=self.up_nod)
+            i.bind(state=self.simulate)
 
-    def up_nod(self, instance, value):
+    def simulate(self, instance, value):
         self.state = not self.sim_nodes[0].state
 
 
@@ -110,9 +108,9 @@ class And(Widget):
 
     def on_sim_nodes(self, instance, value):
         for i in self.sim_nodes:
-            i.bind(state=self.up_nod)
+            i.bind(state=self.simulate)
 
-    def up_nod(self, instance, value):
+    def simulate(self, instance, value):
         s = self.sim_nodes[0].state
         for i in range(len(self.sim_nodes) - 1):
             s = s and self.sim_nodes[i + 1].state
@@ -167,9 +165,9 @@ class Nand(Widget):
 
     def on_sim_nodes(self, instance, value):
         for i in self.sim_nodes:
-            i.bind(state=self.up_nod)
+            i.bind(state=self.simulate)
 
-    def up_nod(self, instance, value):
+    def simulate(self, instance, value):
         s = self.sim_nodes[0].state
         for i in range(len(self.sim_nodes) - 1):
             s = s and self.sim_nodes[i + 1].state
@@ -224,9 +222,9 @@ class Or(Widget):
 
     def on_sim_nodes(self, instance, value):
         for i in self.sim_nodes:
-            i.bind(state=self.up_nod)
+            i.bind(state=self.simulate)
 
-    def up_nod(self, instance, value):
+    def simulate(self, instance, value):
         s = self.sim_nodes[0].state
         for i in range(len(self.sim_nodes) - 1):
             s = s or self.sim_nodes[i + 1].state
@@ -281,9 +279,9 @@ class Nor(Widget):
 
     def on_sim_nodes(self, instance, value):
         for i in self.sim_nodes:
-            i.bind(state=self.up_nod)
+            i.bind(state=self.simulate)
 
-    def up_nod(self, instance, value):
+    def simulate(self, instance, value):
         s = self.sim_nodes[0].state
         for i in range(len(self.sim_nodes) - 1):
             s = s or self.sim_nodes[i + 1].state
@@ -338,9 +336,9 @@ class Xor(Widget):
 
     def on_sim_nodes(self, instance, value):
         for i in self.sim_nodes:
-            i.bind(state=self.up_nod)
+            i.bind(state=self.simulate)
 
-    def up_nod(self, instance, value):
+    def simulate(self, instance, value):
         s = self.sim_nodes[0].state
         for i in range(len(self.sim_nodes) - 1):
             s = s ^ self.sim_nodes[i + 1].state
@@ -395,9 +393,9 @@ class Nxor(Widget):
 
     def on_sim_nodes(self, instance, value):
         for i in self.sim_nodes:
-            i.bind(state=self.up_nod)
+            i.bind(state=self.simulate)
 
-    def up_nod(self, instance, value):
+    def simulate(self, instance, value):
         s = self.sim_nodes[0].state
         for i in range(len(self.sim_nodes) - 1):
             s = s ^ self.sim_nodes[i + 1].state
@@ -491,7 +489,6 @@ class Output(Widget):
         self.size = size
         self.name.size = self.size
         self.name.pos = [self.x, (self.y - self.size[1] / 1.3)]
-        print(self.name.pos)
 
     def on_state(self, instance, value):
         if self.state:
@@ -508,9 +505,9 @@ class Output(Widget):
 
     def on_sim_nodes(self, instance, value):
         for i in self.sim_nodes:
-            i.bind(state=self.up_nod)
+            i.bind(state=self.simulate)
 
-    def up_nod(self, instance, value):
+    def simulate(self, instance, value):
         self.state = self.sim_nodes[0].state
 
 
@@ -576,9 +573,6 @@ class Cir(Widget):
         self.yWin = instance.size[1] * 0.9
         self.xIncr = self.xWin / self.tree["depth"]
         self.yIncr = self.yWin / self.tree["weight"]
-        # self.clear_widgets()
-        # self.inputs = {}
-        # self.build_tree()
 
     def build_tree(self):
         for i in self.tree["nodes"]:
@@ -655,8 +649,7 @@ class Cir(Widget):
             widget = Output(node, x, y, size)
             self.bind(size=widget.update_node, pos=widget.update_node)
         else:
-            print("unknown node object")
-            print(node)
+            raise TypeError("Object is not a node type: {}".format(node))
         return widget
 
 

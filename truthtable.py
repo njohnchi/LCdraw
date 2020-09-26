@@ -1,10 +1,7 @@
 from kivy.app import App
-from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
-from kivy.graphics import Color, Rectangle, BorderImage, Line
-from kivy.uix.image import Image
-from kivy.properties import BooleanProperty, StringProperty
+from kivy.graphics import Color, Rectangle
 from kivy.uix.gridlayout import GridLayout
 
 import boolean as boolean
@@ -14,7 +11,7 @@ class Cell(BoxLayout):
     def __init__(self, text, **kwargs):
         super(Cell, self).__init__(**kwargs)
         self.text = text
-        self.label = Label(text=self.text, size=self.size, pos=self.pos, color=(0,0,0,1))
+        self.label = Label(text=self.text, size=self.size, pos=self.pos, color=(0, 0, 0, 1))
         self.label.font_size = 30
         self.add_widget(self.label)
         with self.canvas.before:
@@ -30,7 +27,6 @@ class Cell(BoxLayout):
 
 
 class TruthTable(GridLayout):
-
     def __init__(self, expression, output, **kwargs):
         super(TruthTable, self).__init__(**kwargs)
         self.output = output
@@ -65,7 +61,6 @@ class TruthTable(GridLayout):
             table = boolean.parse(table, False)
         if isinstance(table, boolean.Expression):
             table = boolean.truth_table(table)
-            print(table)
         else:
             raise TypeError(
                 "Argument must be Expression but it is {}"
@@ -87,7 +82,6 @@ class TruthTable(GridLayout):
             self.cols -= 1
         for sym in sorted(table[0].keys()):
             if isinstance(sym, boolean.Symbol):
-                print([sym])
                 self.cell = Cell(text=str(sym))
                 self.add_widget(self.cell)
         if len(table[0]) > 1:
@@ -100,7 +94,6 @@ class TruthTable(GridLayout):
                     self.cell = Cell(text=str(dic[key]))
                     self.add_widget(self.cell)
                 n += 1
-                print(n)
                 if isinstance(key, boolean.Symbol):
                     self.cell = Cell(text=str(dic[key]))
                     self.add_widget(self.cell)
