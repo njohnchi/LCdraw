@@ -524,7 +524,7 @@ class Wire(Widget):
         _a = (x, a[1])
         _b = (x, b[1])
         with self.canvas:
-            Color(0, 0, 0)
+            Color(0, 0, 0, 1)
             self.line1 = Line(points=(a, _a), width=1.2)
             self.line2 = Line(points=(_a, _b), width=1.2)
             self.line3 = Line(points=(_b, b), width=1.2)
